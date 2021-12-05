@@ -119,7 +119,29 @@ T MIN(T first, Rest... rest) {
 
 
 void solve() {
-    
+    unordered_map<char, pair<int, int>> mp;
+
+    string s;
+    read(s);
+
+    int maxDist = -1;
+    int n = s.size();
+
+    FOR(n) {
+        if(mp.find(s[i]) == mp.end()) {
+            // if not yet created
+            mp[s[i]] = pair<int, int> {i, -1};
+        }
+    }
+
+    for(int i = n-1; i >= 0; i--) {
+        if(mp[s[i]].second == -1) {
+            mp[s[i]].second = i;
+            maxDist = max(maxDist, i - mp[s[i]].first - 1);
+        }
+    }
+
+    write(maxDist);
 }
 
 

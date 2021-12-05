@@ -1,3 +1,6 @@
+/* TLE */
+
+
 #include <iostream>
 #include <bits/stdc++.h>
 #include <string>
@@ -6,6 +9,7 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <stack>
 
 using namespace std;
 
@@ -118,20 +122,88 @@ T MIN(T first, Rest... rest) {
 
 
 
+
+/* TLE */
+
+bool dfs(int a, int b, int n, unordered_map<int, vi>& stairs) {
+    vi vis(n+1, 0);
+    stack<int> s;
+    s.push(a);
+    int curr;
+
+    while(!s.empty()) {
+        curr = s.top();
+        s.pop();
+
+        if(curr == b) return 1;
+        vis[curr] = 1;
+
+        for(int num : stairs[curr]) {
+            if(vis[num] == 0) 
+                s.push(num);
+        }
+    }
+
+    return 0;
+}
+
+bool type1(int a, int b, int p, int q, unordered_map<int, vi> stairs, int n) {
+    stairs[p].erase(remove(all(stairs[p]), q), stairs[p].end());
+    stairs[q].erase(remove(all(stairs[q]), p), stairs[q].end());
+
+    return dfs(a, b, n, stairs);
+}
+
+bool type2(int a, int b, int c, unordered_map<int, vi> stairs, int n) {
+    stairs[c].clear();
+
+    return dfs(a, b, n, stairs);
+}
+
 void solve() {
+    /* TLE */
     
+    int n, e;
+    read(n, e);
+
+    unordered_map<int, vi> stairs;
+
+    int a, b;
+    FOR(e) {
+        read(a, b);
+
+        if(stairs.find(a) == stairs.end()) {
+            stairs[a] = vi{b};
+        } else stairs[a].pb(b);
+
+        if(stairs.find(b) == stairs.end()) {
+            stairs[b] = vi{a};
+        } else stairs[b].pb(a);
+    }
+
+    int Q, c, p, q, type;
+    read(Q);
+
+    FOR(Q) {
+        read(type);
+        if(type == 1) {
+            read(a, b, p, q);
+            write(type1(a, b, p, q, stairs, n)? "yes" : "no");
+        }
+        else {
+            read(a, b, c);
+            write(type2(a, b, c, stairs, n)? "yes" : "no");
+        }
+
+        write('\n');
+    }
 }
 
 
-
+/* TLE */
 int main()
 {
-    int testCases;
-    cin >> testCases;
-    
-    FORVAR(testCases, testIndex) {
-        ANS_DATA = "";
-        solve();
-        cout << ANS_DATA << endl;
-    }
+    ANS_DATA = "";
+    solve();
+    cout << ANS_DATA << endl;
 }

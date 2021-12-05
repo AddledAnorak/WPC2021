@@ -119,19 +119,25 @@ T MIN(T first, Rest... rest) {
 
 
 void solve() {
-    
+    int n;
+    read(n);
+    vi nums(n);
+    read(nums);
+
+    int ans = 0;
+    FOR(n) {
+        if(i%2 != 0) continue;
+        ans += nums[i];
+    }
+
+    write(ans);
 }
 
 
 
 int main()
 {
-    int testCases;
-    cin >> testCases;
-    
-    FORVAR(testCases, testIndex) {
-        ANS_DATA = "";
-        solve();
-        cout << ANS_DATA << endl;
-    }
+    ANS_DATA = "";
+    solve();
+    cout << ANS_DATA << endl;
 }

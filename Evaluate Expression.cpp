@@ -113,25 +113,28 @@ template<class T> T MIN(vt<T> nums) {
 
 template<class T, class... Rest>
 T MIN(T first, Rest... rest) {
-    return min(first, MAX(rest...));
+    return min(first, MIN(rest...));
 }
-
 
 
 void solve() {
-    
+    int n;
+    read(n);
+
+    int num, sum = 0, exp, base;
+    FOR(n) {
+        read(num);
+        exp = num % 10;
+        base = num / 10;
+
+        sum += pow(base, exp);
+    }
+
+    write(sum);
 }
 
-
-
-int main()
-{
-    int testCases;
-    cin >> testCases;
-    
-    FORVAR(testCases, testIndex) {
-        ANS_DATA = "";
-        solve();
-        cout << ANS_DATA << endl;
-    }
+int main() {
+    ANS_DATA = "";
+    solve();
+    cout << ANS_DATA << endl;
 }

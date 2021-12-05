@@ -118,20 +118,39 @@ T MIN(T first, Rest... rest) {
 
 
 
+int getEndNum(int i) {
+    if(i <= 4) return i+3;
+    return i - 5;
+}
+
 void solve() {
-    
+    vi mushrooms(8);
+    FOR(8) {
+        read(mushrooms[i]);
+    }
+
+    int maxSum = 0, currSum, prevSum;
+
+    FOR(4) {
+        maxSum += mushrooms[i];
+    }
+
+    prevSum = maxSum;
+
+    for(int i = 1; i < 8; i++) {
+        currSum = prevSum - mushrooms[i-1] + mushrooms[getEndNum(i)];
+        maxSum = max(maxSum, currSum);
+        prevSum = currSum;
+    }
+
+    write(maxSum);
 }
 
 
 
 int main()
 {
-    int testCases;
-    cin >> testCases;
-    
-    FORVAR(testCases, testIndex) {
-        ANS_DATA = "";
-        solve();
-        cout << ANS_DATA << endl;
-    }
+    ANS_DATA = "";
+    solve();
+    cout << ANS_DATA << endl;
 }

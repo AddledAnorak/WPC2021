@@ -119,19 +119,36 @@ T MIN(T first, Rest... rest) {
 
 
 void solve() {
-    
+    int n;
+    read(n);
+
+    vi scores(n);
+    FOR(n)
+        read(scores[i]);
+
+    sort(all(scores));
+
+    int cutOff = -1;
+    int backRankScore = 1;
+    for(int i = n-1; i >= 0; i--) {
+        cutOff = max(cutOff, scores[i]+backRankScore);
+        backRankScore++;
+    }
+
+
+    int ans = 0;
+    EACH(s, scores) {
+        if(s+n >= cutOff) ans++;
+    }
+
+    write(ans);
 }
 
 
 
 int main()
 {
-    int testCases;
-    cin >> testCases;
-    
-    FORVAR(testCases, testIndex) {
-        ANS_DATA = "";
-        solve();
-        cout << ANS_DATA << endl;
-    }
+    ANS_DATA = "";
+    solve();
+    cout << ANS_DATA << endl;
 }
