@@ -1,6 +1,4 @@
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-
-
+/* INCOMPLETE!! */
 
 
 #include <iostream>
@@ -15,7 +13,7 @@
 using namespace std;
 
 #define FOR(n) for(int i = 0; i < n; i++)
-#define FORVAR(var, n) for(int var = 0; var < n; var++)
+#define FORVAR(n, var) for(int var = 0; var < n; var++)
 #define EACH(var, list_) for (auto& var: list_)
 #define vi vector<int>
 #define vvi vector<vector<int>>
@@ -23,8 +21,6 @@ using namespace std;
 #define vt vector
 #define all(c) (c).begin(), (c).end()
 #define sz(x) (int)(x).size()
-#define W '.'
-#define L 'X'
 
 typedef long long ll;
 typedef long double ld;
@@ -124,110 +120,111 @@ T MIN(T first, Rest... rest) {
 }
 
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-char futureSeas(int i, int j, int r, int c, vt<vt<char>>& grid) {
-    int numSeas = 0;
 
-    if(i == 0 || i == r-1) numSeas++;
 
-    if(i > 0) if(grid[i-1][j] == W) numSeas++;
-    if(i < r-1) if(grid[i+1][j] == W) numSeas++;
-
-    if(j == 0 || j == c-1) numSeas++;
-
-    if(j > 0) if(grid[i][j-1] == W) numSeas++;
-    if(j < c-1) if(grid[i][j+1] == W) numSeas++;
-
-    return numSeas >= 3? W : L;
+void addToMap(string s, unordered_map<string, vt<string>>& mp, string val) {
+    if(mp.find(s) == mp.end()) {
+        mp[s] = vt<string>{val};
+    }
+    else {
+        mp[s].pb(val);
+    }
 }
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
+bool checkAndAddToMap(string s, unordered_map<string, string>& vals, string val, unordered_map<string, vt<string>>& vars, unordered_map<string, bool>& vis) {
+    vis[s] = 1;
+
+    if(vals.find(s) == vals.end()) {
+        vals[s] = val;
+    } else {
+        if(vals[s] != val) return 0;
+    }
+
+    bool ret;
+    EACH(var, vars[s]) {
+        if(vis.find(var) == vis.end()) {
+            ret = checkAndAddToMap(var, vals, val, vars, vis);
+        }
+
+        if(!ret) return 0;
+    }
+
+    return 1;
+}
+
+bool isNum(string s) {
+    EACH(c, s) {
+        if(c < '0' || c > '9') return 0;
+    }
+
+    return 1;
+}
+
 void solve() {
-    int r, c;
-    read(r, c);
+    unordered_map<string, vt<string>> vars;
+    unordered_map<string, string> vals;
 
-    vt<vt<char>> grid(r, vt<char>(c));
-    FOR(r) {
-        read(grid[i]);
+    int n;
+    read(n);
+
+    vt<string> s1, s2;
+    string dummy;
+    FOR(n) {
+        read(dummy);
+        s1.pb(dummy);
+    }
+    FOR(n) {
+        read(dummy);
+        s2.pb(dummy);
     }
 
-    vt<vt<char>> ans(r, vt<char>(c));
+    
+    FOR(n) {
+        if(s1[i] == s2[i]) continue;
 
-    FOR(r) {
-        FORVAR(j, c) {
-            if(grid[i][j] == W) {
-                ans[i][j] = W;
-                continue;
+        if(!isNum(s1[i]) && !isNum(s2[i])) {
+            addToMap(s1[i], vars, s2[i]);
+            addToMap(s2[i], vars, s1[i]);
+        }
+
+        else if(!isNum(s1[i]) && isNum(s2[i])) {
+
+            bool ret = checkAndAddToMap(s1[i], vals, s2[i], vars, unordered_map<string, bool>{});
+            e.clear();
+            if(!ret) {
+                write("false");
+                return;
             }
 
-            ans[i][j] = futureSeas(i, j, r, c, grid);
         }
-    }
 
+        else if(isNum(s1[i]) && !isNum(s2[i])) {
 
-    int minR = r, maxR = 0;
-    int minC = c, maxC = 0;
-
-
-    // getting minR and maxR
-    for(int i = 0; i < r; i++) {
-        if(ans[i] == vt<char>(c, W)) continue;
-        minR = i;
-        break;
-    }
-
-    for(int i = r-1; i >= 0; i--) {
-        if(ans[i] == vt<char>(c, W)) continue;
-        maxR = i;
-        break;
-    }
-
-
-
-
-
-    // getting minC and maxC
-    for(int i = minR; i <= maxR; i++) {
-
-
-        for(int j = 0; j < c; j++) {
-            if(ans[i][j] == L) {
-                minC = min(minC, j);
-                break;
+            bool ret = checkAndAddToMap(s2[i], vals, s1[i], vars, unordered_map<string, bool>{});
+            e.clear();
+            if(!ret) {
+                write("false");
+                return;
             }
+
         }
 
-        for(int j = c-1; j >= 0; j--) {
-            if(ans[i][j] == L) {
-                maxC = max(maxC, j);
-                break;
+         else {
+            if(s1[i] != s2[i]) {
+                write("false");
+                return;
             }
-        }
-
+         }
     }
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-
-    // output-ing
-    for(int i = minR; i < maxR; i++) {
-        for(int j = minC; j <= maxC; j++) {
-            write(ans[i][j]);
-        }
-        write('\n');
-    }
-    for(int j = minC; j <= maxC; j++) {
-        write(ans[maxR][j]);
-    }
-
+    write("true");
 }
 
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
+
 int main()
 {
     ANS_DATA = "";
     solve();
     cout << ANS_DATA << endl;
 }
-
-

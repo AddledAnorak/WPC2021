@@ -1,5 +1,4 @@
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-
+/* NOT WORKING */
 
 
 
@@ -15,7 +14,7 @@
 using namespace std;
 
 #define FOR(n) for(int i = 0; i < n; i++)
-#define FORVAR(var, n) for(int var = 0; var < n; var++)
+#define FORVAR(n, var) for(int var = 0; var < n; var++)
 #define EACH(var, list_) for (auto& var: list_)
 #define vi vector<int>
 #define vvi vector<vector<int>>
@@ -23,8 +22,6 @@ using namespace std;
 #define vt vector
 #define all(c) (c).begin(), (c).end()
 #define sz(x) (int)(x).size()
-#define W '.'
-#define L 'X'
 
 typedef long long ll;
 typedef long double ld;
@@ -124,110 +121,93 @@ T MIN(T first, Rest... rest) {
 }
 
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-char futureSeas(int i, int j, int r, int c, vt<vt<char>>& grid) {
-    int numSeas = 0;
 
-    if(i == 0 || i == r-1) numSeas++;
-
-    if(i > 0) if(grid[i-1][j] == W) numSeas++;
-    if(i < r-1) if(grid[i+1][j] == W) numSeas++;
-
-    if(j == 0 || j == c-1) numSeas++;
-
-    if(j > 0) if(grid[i][j-1] == W) numSeas++;
-    if(j < c-1) if(grid[i][j+1] == W) numSeas++;
-
-    return numSeas >= 3? W : L;
-}
-
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
 void solve() {
-    int r, c;
-    read(r, c);
+    string a, b;
+    read(a, b);
 
-    vt<vt<char>> grid(r, vt<char>(c));
-    FOR(r) {
-        read(grid[i]);
+    int nA = a.size(), nB = b.size();
+    vi coords;
+
+    string uA;
+    FOR(nA) {
+        if(a[i] >= 'A' && a[i] <= 'Z') {
+            uA += a[i];
+            coords.pb(i);
+        }
     }
 
-    vt<vt<char>> ans(r, vt<char>(c));
+    coords.pb(nA);
 
-    FOR(r) {
-        FORVAR(j, c) {
-            if(grid[i][j] == W) {
-                ans[i][j] = W;
-                continue;
+
+    vt<string> tobefounds;
+
+    int j = 0;
+    for(int i = 0; i < nA; i++) {
+        tobefounds.pb("");
+        while(b[j] != uA[i]) {
+            tobefounds[i] += b[j];
+
+            j++;
+
+            if(j == nB) {
+                write('0');
+                return;
             }
 
-            ans[i][j] = futureSeas(i, j, r, c, grid);
         }
     }
 
+    tobefounds.pb("");
 
-    int minR = r, maxR = 0;
-    int minC = c, maxC = 0;
+    for(; j < nB; j++) tobefounds[nA] += b[j];
 
-
-    // getting minR and maxR
-    for(int i = 0; i < r; i++) {
-        if(ans[i] == vt<char>(c, W)) continue;
-        minR = i;
-        break;
-    }
-
-    for(int i = r-1; i >= 0; i--) {
-        if(ans[i] == vt<char>(c, W)) continue;
-        maxR = i;
-        break;
-    }
+    // chars to be found
+    // substr in A
+    // find all chars in order
 
 
+    
+    int aptr = 0;
+    FOR(tobefounds.size()) {
+        int tfptr = 0;
+
+        tf = tobefounds[i];
+
+        if(tf == "") continue;
+        // lower tf
+        tf.tolower();
 
 
+        while(tfptr < tf.size()) {
+            // find if tf is substr of A till some letter of uA
+            while(a[aptr] != tf[tfptr]) {
+                aptr++;
 
-    // getting minC and maxC
-    for(int i = minR; i <= maxR; i++) {
-
-
-        for(int j = 0; j < c; j++) {
-            if(ans[i][j] == L) {
-                minC = min(minC, j);
-                break;
+                if(aptr == coords[i]) {
+                    write('0');
+                    return;
+                }
             }
+            tfptr++;
         }
 
-        for(int j = c-1; j >= 0; j--) {
-            if(ans[i][j] == L) {
-                maxC = max(maxC, j);
-                break;
-            }
-        }
-
+        aptr = coords[i]+1;
     }
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-
-    // output-ing
-    for(int i = minR; i < maxR; i++) {
-        for(int j = minC; j <= maxC; j++) {
-            write(ans[i][j]);
-        }
-        write('\n');
-    }
-    for(int j = minC; j <= maxC; j++) {
-        write(ans[maxR][j]);
-    }
-
+    write('1');
 }
 
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
+
 int main()
 {
-    ANS_DATA = "";
-    solve();
-    cout << ANS_DATA << endl;
+    int testCases;
+    cin >> testCases;
+    
+    FORVAR(testCases, testIndex) {
+        ANS_DATA = "";
+        solve();
+        cout << ANS_DATA << endl;
+    }
 }
-
-

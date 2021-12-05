@@ -1,8 +1,3 @@
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-
-
-
-
 #include <iostream>
 #include <bits/stdc++.h>
 #include <string>
@@ -23,8 +18,6 @@ using namespace std;
 #define vt vector
 #define all(c) (c).begin(), (c).end()
 #define sz(x) (int)(x).size()
-#define W '.'
-#define L 'X'
 
 typedef long long ll;
 typedef long double ld;
@@ -124,110 +117,71 @@ T MIN(T first, Rest... rest) {
 }
 
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-char futureSeas(int i, int j, int r, int c, vt<vt<char>>& grid) {
-    int numSeas = 0;
 
-    if(i == 0 || i == r-1) numSeas++;
-
-    if(i > 0) if(grid[i-1][j] == W) numSeas++;
-    if(i < r-1) if(grid[i+1][j] == W) numSeas++;
-
-    if(j == 0 || j == c-1) numSeas++;
-
-    if(j > 0) if(grid[i][j-1] == W) numSeas++;
-    if(j < c-1) if(grid[i][j+1] == W) numSeas++;
-
-    return numSeas >= 3? W : L;
-}
-
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
 void solve() {
-    int r, c;
-    read(r, c);
+    int n;
+    read(n);
+    
+    string s;
+    read(s);
 
-    vt<vt<char>> grid(r, vt<char>(c));
-    FOR(r) {
-        read(grid[i]);
+    string s1, s2;
+    int s1size, s2size;
+    bool foo = 0;
+    EACH(c, s) {
+        if(c == '*') foo = 1;
+        else if(!foo) s1 += c;
+        else s2 += c;
     }
 
-    vt<vt<char>> ans(r, vt<char>(c));
+    s1size = s1.size();
+    s2size = s2.size();
 
-    FOR(r) {
-        FORVAR(j, c) {
-            if(grid[i][j] == W) {
-                ans[i][j] = W;
-                continue;
+    string curr;
+    int currSize;
+    int endIdx;
+    bool answered = false;
+
+    FORVAR(iterN, n) {
+        answered = false;
+        read(curr);
+        currSize = curr.size();
+
+        FOR(s1size) {
+            if(s1[i] != curr[i]) {
+                write("NO\n");
+                answered = true;
+                break;
+            }
+            endIdx = i;
+        }
+
+        if(answered) continue;
+
+        for(int i = 0; i < s2size; i++) {
+            if(currSize - i - 1 == endIdx) {
+                write("NO\n");
+                answered = true;
+                break;
             }
 
-            ans[i][j] = futureSeas(i, j, r, c, grid);
-        }
-    }
-
-
-    int minR = r, maxR = 0;
-    int minC = c, maxC = 0;
-
-
-    // getting minR and maxR
-    for(int i = 0; i < r; i++) {
-        if(ans[i] == vt<char>(c, W)) continue;
-        minR = i;
-        break;
-    }
-
-    for(int i = r-1; i >= 0; i--) {
-        if(ans[i] == vt<char>(c, W)) continue;
-        maxR = i;
-        break;
-    }
-
-
-
-
-
-    // getting minC and maxC
-    for(int i = minR; i <= maxR; i++) {
-
-
-        for(int j = 0; j < c; j++) {
-            if(ans[i][j] == L) {
-                minC = min(minC, j);
+            if(s2[s2size - i - 1] != curr[currSize - i - 1]) {
+                write("NO\n");
+                answered = true;
                 break;
             }
         }
 
-        for(int j = c-1; j >= 0; j--) {
-            if(ans[i][j] == L) {
-                maxC = max(maxC, j);
-                break;
-            }
-        }
-
+        if(!answered)
+            write("YES\n");
     }
-
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-
-    // output-ing
-    for(int i = minR; i < maxR; i++) {
-        for(int j = minC; j <= maxC; j++) {
-            write(ans[i][j]);
-        }
-        write('\n');
-    }
-    for(int j = minC; j <= maxC; j++) {
-        write(ans[maxR][j]);
-    }
-
 }
 
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
+
 int main()
 {
     ANS_DATA = "";
     solve();
     cout << ANS_DATA << endl;
 }
-
-

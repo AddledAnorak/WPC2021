@@ -1,8 +1,3 @@
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-
-
-
-
 #include <iostream>
 #include <bits/stdc++.h>
 #include <string>
@@ -15,7 +10,7 @@
 using namespace std;
 
 #define FOR(n) for(int i = 0; i < n; i++)
-#define FORVAR(var, n) for(int var = 0; var < n; var++)
+#define FORVAR(n, var) for(int var = 0; var < n; var++)
 #define EACH(var, list_) for (auto& var: list_)
 #define vi vector<int>
 #define vvi vector<vector<int>>
@@ -23,8 +18,6 @@ using namespace std;
 #define vt vector
 #define all(c) (c).begin(), (c).end()
 #define sz(x) (int)(x).size()
-#define W '.'
-#define L 'X'
 
 typedef long long ll;
 typedef long double ld;
@@ -124,110 +117,68 @@ T MIN(T first, Rest... rest) {
 }
 
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-char futureSeas(int i, int j, int r, int c, vt<vt<char>>& grid) {
-    int numSeas = 0;
 
-    if(i == 0 || i == r-1) numSeas++;
-
-    if(i > 0) if(grid[i-1][j] == W) numSeas++;
-    if(i < r-1) if(grid[i+1][j] == W) numSeas++;
-
-    if(j == 0 || j == c-1) numSeas++;
-
-    if(j > 0) if(grid[i][j-1] == W) numSeas++;
-    if(j < c-1) if(grid[i][j+1] == W) numSeas++;
-
-    return numSeas >= 3? W : L;
-}
-
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
 void solve() {
-    int r, c;
-    read(r, c);
+    int v, n;
 
-    vt<vt<char>> grid(r, vt<char>(c));
-    FOR(r) {
-        read(grid[i]);
+    read(v);
+    vi vScores(v);
+    FOR(v) {
+        read(vScores[i]);
     }
 
-    vt<vt<char>> ans(r, vt<char>(c));
+    read(n);
+    vi nScores(n);
+    FOR(n) {
+        read(nScores[i]);
+    }
 
-    FOR(r) {
-        FORVAR(j, c) {
-            if(grid[i][j] == W) {
-                ans[i][j] = W;
-                continue;
-            }
+    int totalScoreBeforeFirstHalf = 0;
+    EACH(t, vScores) if(t <= 1440) totalScoreBeforeFirstHalf++;
+    EACH(t, nScores) if(t <= 1440) totalScoreBeforeFirstHalf++;
 
-            ans[i][j] = futureSeas(i, j, r, c, grid);
+    write(totalScoreBeforeFirstHalf, '\n');
+
+    int t1, t2;
+    int i = 0, j = 0;
+
+    vi relChanges;
+    int relScores = 0;
+    int prevSign = 0;
+
+    while(i < v || j < n) {
+        t1 = i < v? vScores[i] : 4000;
+        t2 = j < n? nScores[j] : 4000;
+
+        if(t1 < t2) {
+            relChanges.pb(1);
+            i++;
+        } else {
+            relChanges.pb(-1);
+            j++;
         }
     }
 
+    prevSign = relChanges[0];
+    int comebacks = 0;
 
-    int minR = r, maxR = 0;
-    int minC = c, maxC = 0;
+    EACH(change, relChanges) {
+        relScores += change;
 
-
-    // getting minR and maxR
-    for(int i = 0; i < r; i++) {
-        if(ans[i] == vt<char>(c, W)) continue;
-        minR = i;
-        break;
-    }
-
-    for(int i = r-1; i >= 0; i--) {
-        if(ans[i] == vt<char>(c, W)) continue;
-        maxR = i;
-        break;
-    }
-
-
-
-
-
-    // getting minC and maxC
-    for(int i = minR; i <= maxR; i++) {
-
-
-        for(int j = 0; j < c; j++) {
-            if(ans[i][j] == L) {
-                minC = min(minC, j);
-                break;
-            }
+        if(relScores * prevSign < 0) {
+            comebacks++;
+            prevSign *= -1;
         }
-
-        for(int j = c-1; j >= 0; j--) {
-            if(ans[i][j] == L) {
-                maxC = max(maxC, j);
-                break;
-            }
-        }
-
     }
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
-
-    // output-ing
-    for(int i = minR; i < maxR; i++) {
-        for(int j = minC; j <= maxC; j++) {
-            write(ans[i][j]);
-        }
-        write('\n');
-    }
-    for(int j = minC; j <= maxC; j++) {
-        write(ans[maxR][j]);
-    }
-
+    write(comebacks);
 }
 
 
-/* CHECK THIS CODE!  COULD BE SPACING ISSUE */
+
 int main()
 {
     ANS_DATA = "";
     solve();
     cout << ANS_DATA << endl;
 }
-
-
